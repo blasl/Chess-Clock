@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="384dp"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="24dp"
+    android:paddingVertical="16dp"
+    android:background="@color/dialog_background"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/restart_question"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvRestartNo"
+            style="@style/restart_answer"
+            android:text="@string/restart_no"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="10dp"
+            android:layout_marginEnd="8dp"
+            />
+
+        <TextView
+            android:id="@+id/tvRestartYes"
+            style="@style/restart_answer"
+            android:text="@string/restart_yes"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="10dp"/>
+    </LinearLayout>
+
+</LinearLayout>

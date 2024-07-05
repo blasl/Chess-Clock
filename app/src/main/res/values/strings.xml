@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Chess Clock</string>
+    <string name="restart_question">¿Reiniciar el reloj?</string>
+    <string name="restart_yes">Sí</string>
+    <string name="restart_no">No</string>
+    <string name="moves">Movimientos: %1$d</string>
+</resources>
