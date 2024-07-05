@@ -2,12 +2,9 @@ package com.example.chessclock
 
 import android.app.Dialog
 import android.media.MediaPlayer
-import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowInsetsController
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -16,10 +13,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import com.example.chessclock.databinding.ActivityMainBinding
+import com.example.chessclock.utils.UiController
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var countDownTimer: CountDownTimer
+    private var uiController = UiController()
     private var player1Moves = 0
     private var player2Moves = 0
     private var isPlayer1Turn = true
@@ -39,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        hideSystemUI()
+        uiController.hideSystemUI(this)
         setListeners()
     }
 
@@ -71,10 +70,10 @@ class MainActivity : AppCompatActivity() {
             override fun onTick(millisUntilFinished: Long) {
                 if (isPlayer1Turn) {
                     timeLeftInMillis1 = millisUntilFinished
-                    updateCountDownText(binding.tvPlayer1Time, timeLeftInMillis1)
+                    uiController.updateCountDownText(binding.tvPlayer1Time, timeLeftInMillis1)
                 } else {
                     timeLeftInMillis2 = millisUntilFinished
-                    updateCountDownText(binding.tvPlayer2Time, timeLeftInMillis2)
+                    uiController.updateCountDownText(binding.tvPlayer2Time, timeLeftInMillis2)
                 }
             }
 
@@ -97,45 +96,9 @@ class MainActivity : AppCompatActivity() {
             }
         }.start()
 
-        updateUI()
+        uiController.updateUI(isPlayer1Turn,binding.cvPlayer1, binding.cvPlayer2, binding.tvPlayer1Time,
+            binding.tvPlayer2Time, binding.ivPauseResumeIcon, binding.tvPlayer1Moves, binding.tvPlayer2Moves)
         reproduceSound(R.raw.clock_tac)
-    }
-
-    private fun updateCountDownText(textView: TextView, timeLeftInMillis: Long) {
-        val minutes = (timeLeftInMillis / 1000) / 60
-        val seconds = (timeLeftInMillis / 1000) % 60
-        val timeFormatted = if (seconds >= 10) "$minutes:$seconds" else "$minutes:0$seconds"
-
-        textView.text = timeFormatted
-    }
-
-    private fun updateUI() {
-        if (isPlayer1Turn) {
-            binding.cvPlayer2.isClickable = false
-            binding.cvPlayer1.isClickable = true
-            binding.cvPlayer1.setCardBackgroundColor(
-                ContextCompat.getColor(this, R.color.player_panel)
-            )
-            binding.cvPlayer2.setCardBackgroundColor(
-                ContextCompat.getColor(this, R.color.player_off)
-            )
-            binding.tvPlayer1Time.setTextColor(ContextCompat.getColor(this, R.color.white))
-            binding.tvPlayer2Time.setTextColor(ContextCompat.getColor(this, R.color.num_color))
-        } else {
-            binding.cvPlayer1.isClickable = false
-            binding.cvPlayer2.isClickable = true
-            binding.cvPlayer2.setCardBackgroundColor(
-                ContextCompat.getColor(this, R.color.player_panel)
-            )
-            binding.cvPlayer1.setCardBackgroundColor(
-                ContextCompat.getColor(this, R.color.player_off)
-            )
-            binding.tvPlayer2Time.setTextColor(ContextCompat.getColor(this, R.color.white))
-            binding.tvPlayer1Time.setTextColor(ContextCompat.getColor(this, R.color.num_color))
-        }
-        binding.ivPauseResumeIcon.setImageResource(R.drawable.ic_pause)
-        binding.tvPlayer1Moves.isVisible = true
-        binding.tvPlayer2Moves.isVisible = true
     }
 
     private fun showRestartDialog() {
@@ -164,8 +127,8 @@ class MainActivity : AppCompatActivity() {
                 binding.cvPlayer2.setCardBackgroundColor(
                     ContextCompat.getColor(this, R.color.player_off)
                 )
-                updateCountDownText(binding.tvPlayer1Time, timeLeftInMillis1)
-                updateCountDownText(binding.tvPlayer2Time, timeLeftInMillis2)
+                uiController.updateCountDownText(binding.tvPlayer1Time, timeLeftInMillis1)
+                uiController.updateCountDownText(binding.tvPlayer2Time, timeLeftInMillis2)
                 binding.tvPlayer1Time.setTextColor(ContextCompat.getColor(this, R.color.num_color))
                 binding.tvPlayer2Time.setTextColor(ContextCompat.getColor(this, R.color.num_color))
                 binding.ivPauseResumeIcon.setImageResource(R.drawable.ic_play)
@@ -184,7 +147,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         tvRestartNo.setOnClickListener { dialog.hide() }
-
         dialog.show()
     }
 
@@ -211,30 +173,8 @@ class MainActivity : AppCompatActivity() {
             binding.ivPauseResumeIcon.setImageResource(R.drawable.ic_play)
         } else {
             timer()
-            updateUI()
-        }
-    }
-
-    private fun hideSystemUI() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.let {
-                it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-                it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            }
-        } else {
-            // Para versiones anteriores a Android 11
-            @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility = (
-                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                            or View.SYSTEM_UI_FLAG_FULLSCREEN
-                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
-        }
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) {
-            hideSystemUI()
+            uiController.updateUI(isPlayer1Turn,binding.cvPlayer1, binding.cvPlayer2, binding.tvPlayer1Time,
+                binding.tvPlayer2Time, binding.ivPauseResumeIcon, binding.tvPlayer1Moves, binding.tvPlayer2Moves)
         }
     }
 
