@@ -5,50 +5,41 @@ import android.os.Build
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import com.example.chessclock.MainActivity
 import com.example.chessclock.R
+import com.example.chessclock.databinding.ActivityMainBinding
 
-class UiController{
-    fun updateUI(
-        isPlayer1Turn: Boolean,
-        cvPlayer1: CardView,
-        cvPlayer2: CardView,
-        tvPlayer1Time: TextView,
-        tvPlayer2Time: TextView,
-        ivPauseResumeIcon: ImageView,
-        tvPlayer1Moves: TextView,
-        tvPlayer2Moves: TextView
-    ) {
+class UiController(private var binding: ActivityMainBinding){
+    fun updateUI(isPlayer1Turn: Boolean) {
         if (isPlayer1Turn) {
-            cvPlayer2.isClickable = false
-            cvPlayer1.isClickable = true
-            cvPlayer1.setCardBackgroundColor(
-                ContextCompat.getColor(cvPlayer1.context, R.color.player_panel)
+            binding.cvPlayer2.isClickable = false
+            binding.cvPlayer1.isClickable = true
+            binding.cvPlayer1.setCardBackgroundColor(
+                ContextCompat.getColor(binding.cvPlayer1.context, R.color.player_panel)
             )
-            cvPlayer2.setCardBackgroundColor(
-                ContextCompat.getColor(cvPlayer2.context, R.color.player_off)
+            binding.cvPlayer2.setCardBackgroundColor(
+                ContextCompat.getColor(binding.cvPlayer2.context, R.color.player_off)
             )
-            tvPlayer1Time.setTextColor(ContextCompat.getColor(tvPlayer1Time.context, R.color.white))
-            tvPlayer2Time.setTextColor(ContextCompat.getColor(tvPlayer2Time.context, R.color.num_color))
+            binding.tvPlayer1Time.setTextColor(ContextCompat.getColor(binding.tvPlayer1Time.context, R.color.white))
+            binding.tvPlayer2Time.setTextColor(ContextCompat.getColor(binding.tvPlayer2Time.context, R.color.num_color))
         } else {
-            cvPlayer1.isClickable = false
-            cvPlayer2.isClickable = true
-            cvPlayer2.setCardBackgroundColor(
-                ContextCompat.getColor(cvPlayer2.context, R.color.player_panel)
+            binding.cvPlayer1.isClickable = false
+            binding.cvPlayer2.isClickable = true
+            binding.cvPlayer2.setCardBackgroundColor(
+                ContextCompat.getColor(binding.cvPlayer2.context, R.color.player_panel)
             )
-            cvPlayer1.setCardBackgroundColor(
-                ContextCompat.getColor(cvPlayer1.context, R.color.player_off)
+            binding.cvPlayer1.setCardBackgroundColor(
+                ContextCompat.getColor(binding.cvPlayer1.context, R.color.player_off)
             )
-            tvPlayer2Time.setTextColor(ContextCompat.getColor(tvPlayer2Time.context, R.color.white))
-            tvPlayer1Time.setTextColor(ContextCompat.getColor(tvPlayer1Time.context, R.color.num_color))
+            binding.tvPlayer2Time.setTextColor(ContextCompat.getColor(binding.tvPlayer2Time.context, R.color.white))
+            binding.tvPlayer1Time.setTextColor(ContextCompat.getColor(binding.tvPlayer1Time.context, R.color.num_color))
         }
-        ivPauseResumeIcon.setImageResource(R.drawable.ic_pause)
-        tvPlayer1Moves.isVisible = true
-        tvPlayer2Moves.isVisible = true
+        binding.ivPauseResumeIcon.setImageResource(R.drawable.ic_pause)
+        binding.tvPlayer1Moves.isVisible = true
+        binding.tvPlayer2Moves.isVisible = true
     }
 
     fun hideSystemUI(activity: Activity){
@@ -73,5 +64,14 @@ class UiController{
         val timeFormatted = if (seconds >= 10) "$minutes:$seconds" else "$minutes:0$seconds"
 
         textView.text = timeFormatted
+    }
+
+    fun updateMoves(activity: MainActivity) {
+        binding.tvPlayer1Moves.text = activity.getString(R.string.moves, activity.player1Moves)
+        binding.tvPlayer2Moves.text = activity.getString(R.string.moves, activity.player2Moves)
+
+        if (activity.isClockRunning) {
+            if (activity.isPlayer1Turn) activity.player1Moves++ else activity.player2Moves++
+        }
     }
 }

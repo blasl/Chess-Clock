@@ -1,7 +1,6 @@
 package com.example.chessclock
 
 import android.app.Dialog
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -13,26 +12,30 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import com.example.chessclock.databinding.ActivityMainBinding
+import com.example.chessclock.utils.Sound
 import com.example.chessclock.utils.UiController
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var countDownTimer: CountDownTimer
-    private var uiController = UiController()
-    private var player1Moves = 0
-    private var player2Moves = 0
-    private var isPlayer1Turn = true
-    private var isClockRunning = false
-    private var isSilentMode = false
-    private var isFinished = false
-    private var startTimeInMillis: Long = 5 * 60 * 1000
-    private var timeLeftInMillis1 = startTimeInMillis
-    private var timeLeftInMillis2 = startTimeInMillis
+    private lateinit var uiController: UiController
+    private lateinit var sound: Sound
+    var player1Moves = 0
+    var player2Moves = 0
+    var isPlayer1Turn = true
+    var isClockRunning = false
+    var isSilentMode = false
+    var isFinished = false
+    var startTimeInMillis: Long = 5 * 60 * 1000
+    var timeLeftInMillis1 = startTimeInMillis
+    var timeLeftInMillis2 = startTimeInMillis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        uiController = UiController(binding)
+        sound = Sound(binding, this)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -47,14 +50,14 @@ class MainActivity : AppCompatActivity() {
         binding.cvPlayer2.setOnClickListener { changeTurn(binding.cvPlayer2) }
         binding.viewRestart.setOnClickListener { showRestartDialog() }
         binding.viewPauseResume.setOnClickListener { pauseResumeClock() }
-        binding.viewSound.setOnClickListener { setSoundMode() }
+        binding.viewSound.setOnClickListener { sound.setMode() }
     }
 
     private fun changeTurn(playerCV: CardView) {
         if(!isFinished) {
             isPlayer1Turn = if (playerCV == binding.cvPlayer1) !isPlayer1Turn else true
             isClockRunning = true
-            updateMoves()
+            uiController.updateMoves(this)
             timer()
         } else showRestartDialog()
     }
@@ -79,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onFinish() {
                 isFinished = true
-                reproduceSound(R.raw.timeout)
+                sound.reproduce(R.raw.timeout)
                 binding.viewPauseResume.visibility = View.GONE
                 binding.ivPauseResumeIcon.visibility = View.GONE
                 if (isPlayer1Turn) {
@@ -96,9 +99,8 @@ class MainActivity : AppCompatActivity() {
             }
         }.start()
 
-        uiController.updateUI(isPlayer1Turn,binding.cvPlayer1, binding.cvPlayer2, binding.tvPlayer1Time,
-            binding.tvPlayer2Time, binding.ivPauseResumeIcon, binding.tvPlayer1Moves, binding.tvPlayer2Moves)
-        reproduceSound(R.raw.clock_tac)
+        uiController.updateUI(isPlayer1Turn)
+        sound.reproduce(R.raw.clock_tac)
     }
 
     private fun showRestartDialog() {
@@ -118,7 +120,7 @@ class MainActivity : AppCompatActivity() {
                 player1Moves = 0
                 player2Moves = 0
                 isPlayer1Turn = true
-                reproduceSound(R.raw.restart_clock)
+                sound.reproduce(R.raw.restart_clock)
                 timeLeftInMillis1 = startTimeInMillis
                 timeLeftInMillis2 = startTimeInMillis
                 binding.cvPlayer1.setCardBackgroundColor(
@@ -141,7 +143,7 @@ class MainActivity : AppCompatActivity() {
                 isClockRunning = false
                 isFinished = false
 
-                updateMoves()
+                uiController.updateMoves(this)
                 dialog.hide()
             }
         }
@@ -153,7 +155,7 @@ class MainActivity : AppCompatActivity() {
     private fun pauseResumeClock() {
         if (isClockRunning) {
             countDownTimer.cancel()
-            reproduceSound(R.raw.tap)
+            sound.reproduce(R.raw.tap)
             isClockRunning = false
 
             binding.cvPlayer1.setCardBackgroundColor(
@@ -173,31 +175,7 @@ class MainActivity : AppCompatActivity() {
             binding.ivPauseResumeIcon.setImageResource(R.drawable.ic_play)
         } else {
             timer()
-            uiController.updateUI(isPlayer1Turn,binding.cvPlayer1, binding.cvPlayer2, binding.tvPlayer1Time,
-                binding.tvPlayer2Time, binding.ivPauseResumeIcon, binding.tvPlayer1Moves, binding.tvPlayer2Moves)
-        }
-    }
-
-    private fun reproduceSound(sound: Int) {
-        if (!isSilentMode) {
-            val mp = MediaPlayer.create(this, sound)
-            mp.start()
-        }
-    }
-
-    private fun updateMoves() {
-        binding.tvPlayer1Moves.text = getString(R.string.moves, player1Moves)
-        binding.tvPlayer2Moves.text = getString(R.string.moves, player2Moves)
-
-        if (isClockRunning) {
-            if (isPlayer1Turn) player1Moves++ else player2Moves++
-        }
-    }
-
-    private fun setSoundMode() {
-        isSilentMode = !isSilentMode
-        if (isSilentMode) binding.ivSoundIcon.setImageResource(R.drawable.ic_sound_off) else {
-            binding.ivSoundIcon.setImageResource(R.drawable.ic_sound)
+            uiController.updateUI(isPlayer1Turn)
         }
     }
 }
