@@ -3,7 +3,9 @@ package com.example.chessclock
 import android.app.Dialog
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.Editable
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -51,6 +53,8 @@ class MainActivity : AppCompatActivity() {
         binding.viewRestart.setOnClickListener { showRestartDialog() }
         binding.viewPauseResume.setOnClickListener { pauseResumeClock() }
         binding.viewSound.setOnClickListener { sound.setMode() }
+        binding.viewAdjustTime1.setOnClickListener { showAdjustTimeDialog(binding.tvPlayer1Time) }
+        binding.viewAdjustTime2.setOnClickListener { showAdjustTimeDialog(binding.tvPlayer2Time) }
     }
 
     private fun changeTurn(playerCV: CardView) {
@@ -173,9 +177,49 @@ class MainActivity : AppCompatActivity() {
             binding.tvPlayer1Time.setTextColor(ContextCompat.getColor(this, R.color.num_color))
             binding.tvPlayer2Time.setTextColor(ContextCompat.getColor(this, R.color.num_color))
             binding.ivPauseResumeIcon.setImageResource(R.drawable.ic_play)
+            binding.viewAdjustTime1.visibility = View.VISIBLE
+            binding.viewAdjustTime2.visibility = View.VISIBLE
+            binding.ivAdjustTime1.visibility = View.VISIBLE
+            binding.ivAdjustTime2.visibility = View.VISIBLE
         } else {
             timer()
             uiController.updateUI(isPlayer1Turn)
         }
+    }
+
+    private fun showAdjustTimeDialog(playerTime: TextView) {
+        sound.reproduce(R.raw.tap)
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_adjust_time)
+
+        val tvTimeSave = dialog.findViewById<TextView>(R.id.tvTimeSave)
+        val tvTimeCancel = dialog.findViewById<TextView>(R.id.tvTimeCancel)
+        val etHour = dialog.findViewById<EditText>(R.id.etHour)
+        val etMinute = dialog.findViewById<EditText>(R.id.etMinute)
+        val etSecond = dialog.findViewById<EditText>(R.id.etSecond)
+        val time = playerTime.text.split(":").reversed()
+
+        etSecond.setText(time[0])
+        etMinute.setText(time[1])
+        if(time.size > 2) etHour.setText(time[2]) else etHour.setText("00")
+
+        tvTimeSave.setOnClickListener {
+            if (playerTime == binding.tvPlayer1Time) {
+                timeLeftInMillis1 = timeToMillis(etHour.text, etMinute.text, etSecond.text)
+                uiController.updateCountDownText(playerTime, timeLeftInMillis1)
+            } else {
+                timeLeftInMillis2 = timeToMillis(etHour.text, etMinute.text, etSecond.text)
+                uiController.updateCountDownText(playerTime, timeLeftInMillis2)
+            }
+
+            dialog.hide()
+        }
+
+        tvTimeCancel.setOnClickListener { dialog.hide() }
+        dialog.show()
+    }
+
+    private fun timeToMillis(h: Editable, min: Editable, seg: Editable): Long {
+        return ((h.toString().toInt()*60*60*1000)+(min.toString().toInt()*60*1000)+(seg.toString().toInt()*1000)).toLong()
     }
 }

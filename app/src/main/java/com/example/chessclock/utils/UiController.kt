@@ -2,6 +2,7 @@ package com.example.chessclock.utils
 
 import android.app.Activity
 import android.os.Build
+import android.util.TypedValue
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
@@ -40,6 +41,10 @@ class UiController(private var binding: ActivityMainBinding){
         binding.ivPauseResumeIcon.setImageResource(R.drawable.ic_pause)
         binding.tvPlayer1Moves.isVisible = true
         binding.tvPlayer2Moves.isVisible = true
+        binding.viewAdjustTime1.visibility = View.GONE
+        binding.viewAdjustTime2.visibility = View.GONE
+        binding.ivAdjustTime1.visibility = View.GONE
+        binding.ivAdjustTime2.visibility = View.GONE
     }
 
     fun hideSystemUI(activity: Activity){
@@ -59,9 +64,21 @@ class UiController(private var binding: ActivityMainBinding){
     }
 
     fun updateCountDownText(textView: TextView, timeLeftInMillis: Long) {
-        val minutes = (timeLeftInMillis / 1000) / 60
+        val hours = (timeLeftInMillis / (1000 * 60 * 60))
+        val minutes = ((timeLeftInMillis / (1000 * 60) % 60))
         val seconds = (timeLeftInMillis / 1000) % 60
-        val timeFormatted = if (seconds >= 10) "$minutes:$seconds" else "$minutes:0$seconds"
+
+        val timeFormatted = if(hours < 1) {
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 120f)
+            if (seconds >= 10) "$minutes:$seconds" else "$minutes:0$seconds"
+        } else {
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 90f)
+            if (minutes >= 10) {
+                if (seconds >= 10) "$hours:$minutes:$seconds" else "$hours:$minutes:0$seconds"
+            } else {
+                if (seconds >= 10) "$hours:0$minutes:$seconds" else "$hours:0$minutes:0$seconds"
+            }
+        }
 
         textView.text = timeFormatted
     }

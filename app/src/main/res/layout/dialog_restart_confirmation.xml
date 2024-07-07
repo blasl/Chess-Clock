@@ -23,19 +23,17 @@
 
         <TextView
             android:id="@+id/tvRestartNo"
-            style="@style/restart_answer"
+            style="@style/dialog_control_text"
             android:text="@string/restart_no"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="10dp"
-            android:layout_marginEnd="8dp"
+            android:textSize="18dp"
+            android:layout_marginEnd="16dp"
             />
 
         <TextView
             android:id="@+id/tvRestartYes"
-            style="@style/restart_answer"
+            style="@style/dialog_control_text"
             android:text="@string/restart_yes"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="10dp"/>
+            android:textSize="18dp"/>
     </LinearLayout>
 
 </LinearLayout>

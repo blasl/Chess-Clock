@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="ImageButton.TransparentCircleRipple" parent="Widget.AppCompat.ImageButton">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
@@ -7,7 +7,7 @@
 
     </style>
 
-    <style name="restart_answer">
+    <style name="dialog_control_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">?selectableItemBackground</item>
@@ -15,7 +15,45 @@
         <item name="android:focusable">true</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:paddingHorizontal" tools:targetApi="o">16dp</item>
+        <item name="android:paddingVertical" tools:targetApi="o">16dp</item>
+    </style>
+    
+    <style name="adjust_time_colon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center|top</item>
+        <item name="android:text">:</item>
+        <item name="android:textSize">64sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginHorizontal" tools:targetApi="o">8dp</item>
+    </style>
+
+    <style name="time_amount_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/player_off</item>
+    </style>
+
+    <style name="adjust_time_controls_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="dialog_edit_text_time">
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:gravity">center|bottom</item>
+        <item name="android:maxLength">2</item>
+        <item name="android:textSize">48sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">23sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:inputType">number</item>
     </style>
 </resources>

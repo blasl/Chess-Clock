@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="24dp"
+    android:paddingVertical="16dp"
+    android:background="@color/dialog_background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/ivSetTimeIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_set_time" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_adjust_time_header"
+            android:textSize="16sp"
+            android:textColor="@color/player_off"
+            android:textAllCaps="true"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="105dp"
+        android:gravity="center|top">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/etHour"
+                style="@style/dialog_edit_text_time"/>
+
+            <TextView
+                style="@style/time_amount_text"
+                android:text="@string/dialog_time_hour"/>
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/adjust_time_colon"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/etMinute"
+                style="@style/dialog_edit_text_time"/>
+
+            <TextView
+                style="@style/time_amount_text"
+                android:text="@string/dialog_time_minute"/>
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/adjust_time_colon"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/etSecond"
+                style="@style/dialog_edit_text_time"/>
+
+            <TextView
+                style="@style/time_amount_text"
+                android:text="@string/dialog_time_second"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="end">
+
+        <TextView
+            android:id="@+id/tvTimeCancel"
+            style="@style/dialog_control_text"
+            android:text="@string/dialog_cancel"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:id="@+id/tvTimeSave"
+            style="@style/dialog_control_text"
+            android:text="@string/dialog_adjust_time_save"/>
+    </LinearLayout>
+</LinearLayout>

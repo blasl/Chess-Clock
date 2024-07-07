@@ -4,4 +4,10 @@
     <string name="restart_yes">Sí</string>
     <string name="restart_no">No</string>
     <string name="moves">Movimientos: %1$d</string>
+    <string name="dialog_adjust_time_header">Ajustar tiempo</string>
+    <string name="dialog_time_hour">Hora</string>
+    <string name="dialog_time_minute">Minuto</string>
+    <string name="dialog_time_second">Segundo</string>
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="dialog_adjust_time_save">Guardar</string>
 </resources>
